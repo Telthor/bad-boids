@@ -6,14 +6,20 @@ for use as an exercise on refactoring.
 from matplotlib import pyplot as plt
 from matplotlib import animation
 import random
+import numpy as np
 
-# Deliberately terrible code for teaching purposes
+# Created a class structure
 Boid = Class(object):
 
+	def __init__(self, Boids_total = 50,
+										dimension_limits = [-450, 50, 300.0, 600.0] # x = 0,1 y = 2, 3
+										velocity_limits = [0, 10.0, -20.0, 20.0]):# x = 0,1 y = 2,3
+										self.boid_locations = [random.uniform(self.dimension_limits[0], self.dimension_limits[1])]
+										self.boid_velocities =
 
 
-	boids_x=[random.uniform(-450,50.0) for x in range(50)]
-	boids_y=[random.uniform(300.0,600.0) for x in range(50)]
+	#boids_x=[random.uniform(-450,50.0) for x in range(50)]
+	#boids_y=[random.uniform(300.0,600.0) for x in range(50)]
 	boid_x_velocities=[random.uniform(0,10.0) for x in range(50)]
 	boid_y_velocities=[random.uniform(-20.0,20.0) for x in range(50)]
 	boids=(boids_x,boids_y,boid_x_velocities,boid_y_velocities)
@@ -43,6 +49,11 @@ Boid = Class(object):
 		for i in range(len(xs)):
 			xs[i]=xs[i]+xvs[i]
 			ys[i]=ys[i]+yvs[i]
+
+	def create_flock(self, count, upperlimits, lowerlimits):
+		width = upperlimits - lowerlimits
+		return (lowerlimits[:, np.newaxis] + np.random.rand(2, count)*width[:, np.newaxis])
+
 
 
 	figure=plt.figure()
