@@ -9,20 +9,22 @@ import random
 import numpy as np
 
 # Created a class structure
-Boid = Class(object):
+class Boids(object):
 
 	def __init__(self, Boids_total = 50,
-										dimension_limits = [-450, 50, 300.0, 600.0] # x = 0,1 y = 2, 3
+										dimension_limits = [-450, 50, 300.0, 600.0], # x = 0,1 y = 2, 3
 										velocity_limits = [0, 10.0, -20.0, 20.0]):# x = 0,1 y = 2,3
-										self.boid_locations = self.create_flock(self.Boids_total,self.dimension_limits[1,3], self.dimension_limits[0,2])
-										self.boid_velocities = self.create_flock(self.Boids_total, self.velocity_limits[1,3],self.velocity_limits[0,2])
+									self.boid_locations = self.create_flock(self.Boids_total,self.dimension_limits[1,3], self.dimension_limits[0,2])
+									self.boid_velocities = self.create_flock(self.Boids_total, self.velocity_limits[1,3],self.velocity_limits[0,2])
+
+
 
 
 	#boids_x=[random.uniform(-450,50.0) for x in range(50)]
 	#boids_y=[random.uniform(300.0,600.0) for x in range(50)]
-	boid_x_velocities=[random.uniform(0,10.0) for x in range(50)]
-	boid_y_velocities=[random.uniform(-20.0,20.0) for x in range(50)]
-	boids=(boids_x,boids_y,boid_x_velocities,boid_y_velocities)
+	#boid_x_velocities=[random.uniform(0,10.0) for x in range(50)]
+	#boid_y_velocities=[random.uniform(-20.0,20.0) for x in range(50)]
+	#boids=(boids_x,boids_y,boid_x_velocities,boid_y_velocities)
 
 	def update_boids(boids):
 		xs,ys,xvs,yvs=boids
