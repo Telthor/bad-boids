@@ -7,6 +7,7 @@ from matplotlib import pyplot as plt
 from matplotlib import animation
 import random
 import numpy as np
+import yaml
 
 # Created a class structure
 class Boids(object):
@@ -15,7 +16,7 @@ class Boids(object):
 										dimension_limits = [-450, 300.0, 50, 600.0], # x = 0,1 y = 2, 3
 										velocity_limits = [0, -20.0, 10, 20.0],
 										move_to_middle_strength = 0.01,
-										alert_distance = 200,
+										alert_distance = 100,
 										formation_flying_distance = 10000,
 										formation_flying_strength = 0.125,
 										):# x = 0,1 y = 2,3
@@ -29,13 +30,20 @@ class Boids(object):
 
 
 
-	#boids_x=[random.uniform(-450,50.0) for x in range(50)]
-	#boids_y=[random.uniform(300.0,600.0) for x in range(50)]
-	#boid_x_velocities=[random.uniform(0,10.0) for x in range(50)]
-	#boid_y_velocities=[random.uniform(-20.0,20.0) for x in range(50)]
-	#boids=(boids_x,boids_y,boid_x_velocities,boid_y_velocities)
 
 
+	@classmethod
+	def init_from_data(cls, data):
+		flock = cls()
+		data = [np.array(element) for element in data]
+		flock.boid_locations[0], flock.boid_locations[1], flock.boid_velocities[0], flock.boid_velocities[1] = data
+		return flock
+
+	@property
+	def data(self):
+		x, y = self.boid_locations
+		xv, yv = self.boid_velocities
+		return (x, y, xv, yv)
 
 	def update_boids(self):
 		# Head to middle
@@ -50,7 +58,7 @@ class Boids(object):
 		separations_if_close = np.copy(separations)
 		separations_if_close[0,:,:][far_away] = 0
 		separations_if_close[1,:,:][far_away] = 0
-		self.boid_velocities += np.sum(separations_if_close,1)
+		self.boid_velocities += np.sum(separations_if_close, 1)
 		# match velocities
 		velocity_differences = self.boid_velocities[:,np.newaxis,:] - self.boid_velocities[:,:,np.newaxis]
 		very_far = squared_distances>self.formation_flying_distance
