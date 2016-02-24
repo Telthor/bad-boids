@@ -13,9 +13,16 @@ class Boids(object):
 
 	def __init__(self, Boids_total = 50,
 										dimension_limits = [-450, 50, 300.0, 600.0], # x = 0,1 y = 2, 3
-										velocity_limits = [0, 10.0, -20.0, 20.0]):# x = 0,1 y = 2,3
+										velocity_limits = [0, 10.0, -20.0, 20.0],
+										move_to_middle_strength = 0.01,
+										alert_distance = 2000,
+										formation_flying_distance = 10000
+										formation_flying_strength = 0.125
+										):# x = 0,1 y = 2,3
 									self.boid_locations = self.create_flock(self.Boids_total,self.dimension_limits[1,3], self.dimension_limits[0,2])
 									self.boid_velocities = self.create_flock(self.Boids_total, self.velocity_limits[1,3],self.velocity_limits[0,2])
+									self.move_to_middle_strength = move_to_middle_strength
+									self.alert_distance = alert_distance
 
 
 
@@ -31,22 +38,22 @@ class Boids(object):
 		# Fly towards the middle
 		for i in range(len(xs)):
 			for j in range(len(xs)):
-				xvs[i]=xvs[i]+(xs[j]-xs[i])*0.01/len(xs)
+				xvs[i]=xvs[i]+(xs[j]-xs[i])*move_to_middle_strength/len(xs)
 		for i in range(len(xs)):
 			for j in range(len(xs)):
-				yvs[i]=yvs[i]+(ys[j]-ys[i])*0.01/len(xs)
+				yvs[i]=yvs[i]+(ys[j]-ys[i])*move_to_middle_strength/len(xs)
 		# Fly away from nearby boids
 		for i in range(len(xs)):
 			for j in range(len(xs)):
-				if (xs[j]-xs[i])**2 + (ys[j]-ys[i])**2 < 100:
+				if (xs[j]-xs[i])**2 + (ys[j]-ys[i])**2 < alert_distance:
 					xvs[i]=xvs[i]+(xs[i]-xs[j])
 					yvs[i]=yvs[i]+(ys[i]-ys[j])
 		# Try to match speed with nearby boids
 		for i in range(len(xs)):
 			for j in range(len(xs)):
-				if (xs[j]-xs[i])**2 + (ys[j]-ys[i])**2 < 10000:
-					xvs[i]=xvs[i]+(xvs[j]-xvs[i])*0.125/len(xs)
-					yvs[i]=yvs[i]+(yvs[j]-yvs[i])*0.125/len(xs)
+				if (xs[j]-xs[i])**2 + (ys[j]-ys[i])**2 < formation_flying_distance:
+					xvs[i]=xvs[i]+(xvs[j]-xvs[i])*formation_flying_strength/len(xs)
+					yvs[i]=yvs[i]+(yvs[j]-yvs[i])*formation_flying_strength/len(xs)
 		# Move according to velocities
 		for i in range(len(xs)):
 			xs[i]=xs[i]+xvs[i]
