@@ -12,17 +12,19 @@ import numpy as np
 class Boids(object):
 
 	def __init__(self, Boids_total = 50,
-										dimension_limits = [-450, 50, 300.0, 600.0], # x = 0,1 y = 2, 3
-										velocity_limits = [0, 10.0, -20.0, 20.0],
+										dimension_limits = [-450, 300.0, 50, 600.0], # x = 0,1 y = 2, 3
+										velocity_limits = [0, -20.0, 10, 20.0],
 										move_to_middle_strength = 0.01,
-										alert_distance = 2000,
+										alert_distance = 200,
 										formation_flying_distance = 10000,
 										formation_flying_strength = 0.125,
 										):# x = 0,1 y = 2,3
-									self.boid_locations = self.create_flock(self.Boids_total,self.dimension_limits[1,3], self.dimension_limits[0,2])
-									self.boid_velocities = self.create_flock(self.Boids_total, self.velocity_limits[1,3],self.velocity_limits[0,2])
+									self.boid_locations = self.create_flock(Boids_total, np.array(dimension_limits[2:4]), np.array(dimension_limits[0:2]))
+									self.boid_velocities = self.create_flock(Boids_total, np.array(velocity_limits[2:4]),   np.array(velocity_limits[0:2]))
 									self.move_to_middle_strength = move_to_middle_strength
 									self.alert_distance = alert_distance
+									self.formation_flying_distance = formation_flying_distance
+									self.formation_flying_strength = formation_flying_strength
 
 
 
@@ -39,7 +41,7 @@ class Boids(object):
 		# Head to middle
 		middle = np.mean(self.boid_locations, 1)
 		direction_to_middle = self.boid_locations - middle[:,np.newaxis]
-		boid_velocities -= self.boid_velocities - direction_to_middle*self.move_to_middle_strength
+		self.boid_velocities -= direction_to_middle*self.move_to_middle_strength
 		# Avoid colisions
 		separations = self.boid_locations[:,np.newaxis,:] - self.boid_locations[:,:,np.newaxis]
 		squared_displacements = separations*separations
@@ -48,16 +50,16 @@ class Boids(object):
 		separations_if_close = np.copy(separations)
 		separations_if_close[0,:,:][far_away] = 0
 		separations_if_close[1,:,:][far_away] = 0
-		velocities += np.sum(separations_if_close,1)
+		self.boid_velocities += np.sum(separations_if_close,1)
 		# match velocities
-		velocity_differences = boid_velocities[:,np.newaxis,:] - velocities[:,:,np.newaxis]
+		velocity_differences = self.boid_velocities[:,np.newaxis,:] - self.boid_velocities[:,:,np.newaxis]
 		very_far = squared_distances>self.formation_flying_distance
 		velocity_differences_if_close = np.copy(velocity_differences)
 		velocity_differences_if_close[0,:,:][very_far] = 0
 		velocity_differences_if_close[1,:,:][very_far] = 0
-		boid_velocities -= np.mean(velocity_differences_if_close, 1) * self.formation_flying_strength
+		self.boid_velocities -= np.mean(velocity_differences_if_close, 1) * self.formation_flying_strength
 
-		boid_locations += boid_velocities
+		self.boid_locations += self.boid_velocities
 
 
 
@@ -67,19 +69,21 @@ class Boids(object):
 		width = upperlimits - lowerlimits
 		return (lowerlimits[:, np.newaxis] + np.random.rand(2, count)*width[:, np.newaxis])
 
+Limits = [-500, 1500]
+
+flock_1 = Boids()
+figure = plt.figure()
+axes = plt.axes(xlim = Limits, ylim = Limits)
+scatter = axes.scatter(flock_1.boid_locations[0],flock_1.boid_locations[1])
+
+def animate(frame):
+	flock_1.update_boids()
+	scatter.set_offsets(flock_1.boid_locations.transpose())
+
+anim=animation.FuncAnimation(figure, animate,
+                                 frames=50, interval=50)
 
 
-	figure=plt.figure()
-	axes=plt.axes(xlim=(-500,1500), ylim=(-500,1500))
-	scatter=axes.scatter(boids[0],boids[1])
 
-	def animate(self):
-	   update_boids(boids)
-	   scatter.set_offsets(zip(boids[0],boids[1]))
-
-
-	anim = animation.FuncAnimation(figure, animate,
-	                               frames=50, interval=50)
-
-	if __name__ == "__main__":
-	    plt.show()
+if __name__ == "__main__":
+	plt.show()
