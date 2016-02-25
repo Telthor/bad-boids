@@ -44,30 +44,6 @@ class Boids(object):
 		xv, yv = self.boid_velocities
 		return (x, y, xv, yv)
 
-	# def update_boids(self):
-	# 	# Head to middle
-	# 	middle = np.mean(self.boid_locations, 1)
-	# 	direction_to_middle = self.boid_locations - middle[:,np.newaxis]
-	# 	self.boid_velocities -= direction_to_middle*self.move_to_middle_strength
-	# 	# Avoid colisions
-	# 	separations = self.boid_locations[:,np.newaxis,:] - self.boid_locations[:,:,np.newaxis]
-	# 	squared_displacements = separations*separations
-	# 	squared_distances = np.sum(squared_displacements,0)
-	# 	far_away = squared_distances>self.alert_distance
-	# 	separations_if_close = np.copy(separations)
-	# 	separations_if_close[0,:,:][far_away] = 0
-	# 	separations_if_close[1,:,:][far_away] = 0
-	# 	self.boid_velocities += np.sum(separations_if_close, 1)
-	# 	# match velocities
-	# 	velocity_differences = self.boid_velocities[:,np.newaxis,:] - self.boid_velocities[:,:,np.newaxis]
-	# 	very_far = squared_distances>self.formation_flying_distance
-	# 	velocity_differences_if_close = np.copy(velocity_differences)
-	# 	velocity_differences_if_close[0,:,:][very_far] = 0
-	# 	velocity_differences_if_close[1,:,:][very_far] = 0
-	# 	self.boid_velocities -= np.mean(velocity_differences_if_close, 1) * self.formation_flying_strength
-	#
-	# 	self.boid_locations += self.boid_velocities
-
 	def get_separation(self):
 
 		separations = self.boid_locations[:,np.newaxis,:] - self.boid_locations[:,:,np.newaxis]
