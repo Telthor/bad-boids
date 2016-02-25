@@ -17,7 +17,7 @@ class Boids(object):
 										move_to_middle_strength = 0.01,
 										alert_distance = 100,
 										formation_flying_distance = 10000,
-										formation_flying_strength = 0.125,
+										formation_flying_strength = 0.125, Limits = [-500, 1500]
 										):# x = 0,1 y = 2,3
 									self.boid_locations = self.create_flock(Boids_total, np.array(dimension_limits[2:4]), np.array(dimension_limits[0:2]))
 									self.boid_velocities = self.create_flock(Boids_total, np.array(velocity_limits[2:4]),   np.array(velocity_limits[0:2]))
@@ -25,6 +25,11 @@ class Boids(object):
 									self.alert_distance = alert_distance
 									self.formation_flying_distance = formation_flying_distance
 									self.formation_flying_strength = formation_flying_strength
+									self.positions = (self.boid_locations[0],self.boid_locations[1])
+									self.Limits = Limits
+									# axes = plt.axes(xlim = self.Limits, ylim = self.Limits)
+									# self.figure = plt.figure()
+									# self.scatter = axes.scatter(self.boid_locations[0], self.boid_locations[1])
 
 
 
@@ -67,7 +72,7 @@ class Boids(object):
 		return np.sum(separations_if_close, 1)
 
 	def match_velocities(self):
-		
+
 		separations, squared_distances = self.get_separation()
 		velocity_differences = self.boid_velocities[:,np.newaxis,:] - self.boid_velocities[:,:,np.newaxis]
 		very_far = squared_distances>self.formation_flying_distance
@@ -93,22 +98,3 @@ class Boids(object):
 	def create_flock(self, count, upperlimits, lowerlimits):
 		width = upperlimits - lowerlimits
 		return (lowerlimits[:, np.newaxis] + np.random.rand(2, count)*width[:, np.newaxis])
-
-Limits = [-500, 1500]
-
-flock_1 = Boids()
-figure = plt.figure()
-axes = plt.axes(xlim = Limits, ylim = Limits)
-scatter = axes.scatter(flock_1.boid_locations[0],flock_1.boid_locations[1])
-
-def animate(frame):
-	flock_1.update_boids()
-	scatter.set_offsets(flock_1.boid_locations.transpose())
-
-anim=animation.FuncAnimation(figure, animate,
-                                 frames=50, interval=50)
-
-
-
-if __name__ == "__main__":
-	plt.show()

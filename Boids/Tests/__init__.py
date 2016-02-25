@@ -1,0 +1,2 @@
+from ..boids import Boids
+

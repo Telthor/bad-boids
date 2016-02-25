@@ -1,4 +1,4 @@
-from boids import Boids
+from ..boids import Boids
 from nose.tools import assert_almost_equal
 import os
 import yaml
