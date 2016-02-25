@@ -67,6 +67,7 @@ class Boids(object):
 		return np.sum(separations_if_close, 1)
 
 	def match_velocities(self):
+		
 		separations, squared_distances = self.get_separation()
 		velocity_differences = self.boid_velocities[:,np.newaxis,:] - self.boid_velocities[:,:,np.newaxis]
 		very_far = squared_distances>self.formation_flying_distance
