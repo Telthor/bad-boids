@@ -17,7 +17,7 @@ class Boids(object):
 										move_to_middle_strength = 0.01,
 										alert_distance = 100,
 										formation_flying_distance = 10000,
-										formation_flying_strength = 0.125, Limits = [-500, 1500]
+										formation_flying_strength = 0.125, Limits = [-500, 1500], frames = 50, interval = 50
 										):# x = 0,1 y = 2,3
 									self.boid_locations = self.create_flock(Boids_total, np.array(dimension_limits[2:4]), np.array(dimension_limits[0:2]))
 									self.boid_velocities = self.create_flock(Boids_total, np.array(velocity_limits[2:4]),   np.array(velocity_limits[0:2]))
@@ -27,9 +27,10 @@ class Boids(object):
 									self.formation_flying_strength = formation_flying_strength
 									self.positions = (self.boid_locations[0],self.boid_locations[1])
 									self.Limits = Limits
-									# axes = plt.axes(xlim = self.Limits, ylim = self.Limits)
-									# self.figure = plt.figure()
-									# self.scatter = axes.scatter(self.boid_locations[0], self.boid_locations[1])
+									self.figure = plt.figure()
+									self.frames = frames
+									self.interval = interval
+
 
 
 
@@ -98,3 +99,15 @@ class Boids(object):
 	def create_flock(self, count, upperlimits, lowerlimits):
 		width = upperlimits - lowerlimits
 		return (lowerlimits[:, np.newaxis] + np.random.rand(2, count)*width[:, np.newaxis])
+
+	def animate(self, frame):
+		   self.update_boids()
+		   self.scatter.set_offsets(self.boid_locations.transpose())
+
+
+	def show_sim(self):
+		figure=plt.figure()
+		self.axes=plt.axes(xlim=self.Limits, ylim=self.Limits)
+		self.scatter=self.axes.scatter(self.boid_locations[0],self.boid_locations[1])
+		anim = animation.FuncAnimation(figure, self.animate, frames=self.frames, interval=self.interval)
+		plt.show()

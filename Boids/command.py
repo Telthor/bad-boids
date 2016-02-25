@@ -6,7 +6,7 @@ from matplotlib import pyplot as plt
 def process():
     parser = ArgumentParser(description = 'A simulation of bird-like flocking behaviour')
 
-    parser.add_argument('--config','-c', help = 'your configuration file for boids')
+    parser.add_argument('--config','-c',default = 'config.yaml', help = 'your configuration file for boids')
 
     arguments = parser.parse_args()
 
@@ -14,6 +14,4 @@ def process():
 
 
 if __name__ == '__main__':
-    process()
-
-    
+    plt.show()
