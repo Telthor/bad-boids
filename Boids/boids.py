@@ -12,7 +12,7 @@ import numpy as np
 class Boids(object):
 
 	def __init__(self, Boids_total = 50,
-										dimension_limits = [-450, 300.0, 50, 600.0], # x = 0,1 y = 2, 3
+										dimension_limits = [-450, 300.0, 50, 600.0], # x = 0,2 y = 1, 3
 										velocity_limits = [0, -20.0, 10, 20.0],
 										move_to_middle_strength = 0.01,
 										alert_distance = 100,
@@ -27,7 +27,6 @@ class Boids(object):
 									self.formation_flying_strength = formation_flying_strength
 									self.positions = (self.boid_locations[0],self.boid_locations[1])
 									self.Limits = Limits
-									self.figure = plt.figure()
 									self.frames = frames
 									self.interval = interval
 
